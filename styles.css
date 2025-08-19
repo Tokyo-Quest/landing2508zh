@@ -1,0 +1,651 @@
+/* Base - CRT/Retro broken game vibe */
+:root{
+  --bg:#0b0d12;
+  --bg-2:#0f121a;
+  --fg:#e6f0ff;
+  --muted:#9bb3d1;
+  --accent:#00e5ff;
+  --accent-2:#ff3df0;
+  --accent-3:#80ffea;
+  --line:#1a2030;
+  --card:#111622cc;
+  --shadow:0 0 0 1px rgba(128,255,234,.12), 0 8px 24px rgba(0,0,0,.5);
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  font-family:"Chakra Petch", system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji";
+  color:var(--fg);
+  background:radial-gradient(1200px 800px at 50% -10%, #152030 0%, var(--bg) 45%) no-repeat fixed;
+  overflow-x:hidden;
+  text-rendering:optimizeLegibility;
+  max-width:100vw; /* prevent accidental horizontal overflow */
+}
+
+/* Global noise and scanlines for CRT effect */
+.global-noise{
+  position:fixed; inset:0; pointer-events:none; z-index:0;
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,.03) 0px, rgba(255,255,255,.03) 1px, transparent 1px, transparent 2px),
+    url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity=".06"/></svg>');
+  mix-blend-mode:overlay;
+  animation:noiseShift 1.8s steps(6) infinite;
+}
+@keyframes noiseShift{
+  50%{opacity:.7; transform:translate3d(0,0,0)}
+  100%{opacity:.9; transform:translate3d(-1px,1px,0)}
+}
+.scanlines{
+  position:fixed; inset:0; pointer-events:none; z-index:1;
+  background:repeating-linear-gradient(180deg, rgba(0,0,0,.15) 0 2px, transparent 2px 4px);
+  opacity:.35; mix-blend-mode:multiply;
+}
+/* Guard rails to stop horizontal scroll bleed on all main wrappers */
+:where(html,body){max-width:100%; overflow-x:hidden}
+:where(.site-header,.hero,.section,.container,.hero-inner,.spots-scroller,.cta-band,.site-footer){
+  max-width:100vw;
+  overflow-x:clip;
+}
+
+/* Header */
+.site-header{
+  position:sticky; top:0; z-index:5;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px; padding:10px 12px;
+  background:
+    linear-gradient(180deg, rgba(10,12,18,.92) 0%, rgba(10,12,18,.72) 100%),
+    radial-gradient(600px 240px at 0% 0%, rgba(0,229,255,.05), transparent 70%);
+  backdrop-filter:blur(8px);
+  border-bottom:1px solid var(--line);
+}
+.brand{display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--fg); min-width:0}
+.brand img{display:none} /* keep logo image hidden */
+.brand-text{display:inline-block; font-weight:700; letter-spacing:.04em; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:60vw}
+.brand-text--glitch{
+  position:relative; display:inline-block; line-height:1.1;
+  text-shadow:0 0 10px rgba(0,229,255,.28);
+}
+.brand-text--glitch::before,
+.brand-text--glitch::after{
+  content:attr(data-glitch);
+  position:absolute; inset:0; pointer-events:none;
+}
+.brand-text--glitch::before{left:.5px; text-shadow:-1.5px 0 var(--accent); clip-path:polygon(0 2%,100% 0,100% 42%,0 44%)}
+.brand-text--glitch::after{left:-.5px; text-shadow:1.5px 0 var(--accent-2); clip-path:polygon(0 58%,100% 56%,100% 100%,0 100%)}
+.brand-text--glitch:hover{animation:flicker .16s steps(2) infinite}
+
+.top-nav{display:flex; align-items:center; gap:12px; margin-left:auto}
+.nav-link{color:var(--muted); text-decoration:none; font-size:13px; padding:6px 0}
+.nav-link:hover{color:var(--fg)}
+.nav-link.cta{
+  color:#061016; background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  padding:8px 12px; border-radius:6px; font-weight:700; text-transform:uppercase; letter-spacing:.06em;
+  box-shadow:0 0 10px rgba(0,229,255,.3), inset 0 0 8px rgba(255,61,240,.15);
+}
+
+/* Mobile header layout */
+@media (max-width:720px){
+  .site-header{padding:10px 12px; gap:8px}
+  .brand-text{font-size:14px; max-width:52vw}
+  .top-nav{gap:10px}
+  .nav-link{font-size:12px}
+  .nav-link.cta{padding:6px 10px; border-radius:6px}
+}
+
+/* Very narrow phones */
+@media (max-width:380px){
+  .brand-text{font-size:13px; max-width:50vw}
+  .top-nav{gap:8px}
+  .nav-link{font-size:11px}
+  .nav-link.cta{padding:6px 8px}
+}
+
+/* Hero */
+.hero{
+  position:relative; min-height:68vh; display:grid; place-items:center; overflow:hidden; border-bottom:1px solid var(--line);
+  background:#06080d;
+  /* revert: no trimming (back to state before trimming instruction) */
+  clip-path: none;
+}
+.hero-bg{
+  position:absolute; inset:0; width:100%; height:100%;
+  /* Show even more of the top subject */
+  object-fit:cover; object-position:center 30%;
+  opacity:.55; filter:grayscale(.1) contrast(1.1) saturate(1.1);
+  transform:translateZ(0);
+}
+.hero-overlay{
+  position:absolute; inset:0;
+  background:
+    linear-gradient(180deg, rgba(6,8,13,.85) 0%, rgba(6,8,13,.6) 28%, rgba(6,8,13,.35) 48%, rgba(6,8,13,.6) 74%, rgba(6,8,13,.9) 100%),
+    radial-gradient(800px 420px at 50% 10%, transparent 0%, rgba(6,8,13,.35) 55%, rgba(6,8,13,.65) 100%),
+    repeating-linear-gradient(90deg, rgba(128,255,234,.06) 0 1px, transparent 1px 3px);
+  mix-blend-mode:overlay;
+}
+/* Center text block vertically in the hero */
+.hero-inner{
+  position:relative; z-index:2; padding:24px 16px; text-align:center; max-width:860px; width:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:56vh;
+  transform:translateY(-6vh); /* default: near visual center */
+}
+h1{margin:0 0 12px; font-size: clamp(28px, 6vw, 56px); line-height:1.02}
+.sub{margin:0 auto 20px; max-width:720px; color:var(--muted); font-size: clamp(14px, 2.6vw, 18px)}
+
+/* Variant: place text near the top of the hero (toggle by adding .hero--top to the hero section) */
+.hero.hero--top .hero-inner{
+  justify-content:flex-start;
+  /* revert: remove extra upward nudge (use same as centered) */
+  transform:none;
+}
+/* Keep hero text centered across viewport heights */
+@media (min-height:700px){
+  .hero-inner{min-height:60vh; transform:translateY(-7vh)}
+  .hero.hero--top .hero-inner{transform:none}
+  .hero-bg{object-position:center 36%}
+  .hero{clip-path: inset(0 0 8% 0)}
+}
+@media (max-height:699px){
+  .hero-inner{min-height:52vh; transform:translateY(-5vh)}
+  .hero.hero--top .hero-inner{transform:none}
+  .hero-bg{object-position:center 40%}
+  .hero{clip-path: inset(0 0 12% 0)}
+}
+.hero-cta{display:flex; flex-direction:column; align-items:center; gap:10px}
+.trust{color:#9dd7ff; opacity:.9; font-size:12px; letter-spacing:.06em; text-transform:uppercase}
+
+/* optional: push headline even higher on very narrow phones */
+@media (max-width:380px){
+  .hero-inner{padding-top:132px}
+}
+/* tighten bottom of hero; center content */
+.hero{padding-bottom:0; margin-bottom:0}
+.hero-overlay{pointer-events:none}
+
+/* Ensure next section attaches tightly under the clipped hero */
+.section.how{margin-top:0}
+
+/* Soft bottom crop without affecting layout or text position */
+.hero{
+  clip-path: inset(0 0 10% 0);
+}
+
+/* ensure headings/subtitle spacing while centered */
+h1{margin:0 0 8px}
+.sub{margin:0 auto 16px}
+
+/* Slightly stronger top emphasis by viewport */
+@media (min-height:700px){
+  .hero-bg{object-position:center 28%}
+}
+@media (max-height:699px){
+  .hero-bg{object-position:center 32%}
+}
+
+/* Glitch title */
+.glitch{
+  position:relative; display:inline-block; text-shadow:
+    0 0 0 rgba(0,0,0,0),
+    0 0 12px rgba(0,229,255,.35);
+}
+.glitch::before,.glitch::after{
+  content:attr(data-glitch);
+  position:absolute; inset:0; pointer-events:none;
+}
+.glitch::before{left:1px; text-shadow:-2px 0 var(--accent); clip-path:polygon(0 2%,100% 0,100% 40%,0 42%)}
+.glitch::after{left:-1px; text-shadow:2px 0 var(--accent-2); clip-path:polygon(0 60%,100% 58%,100% 100%,0 100%)}
+.glitch:hover{animation:flicker .16s steps(2) infinite}
+@keyframes flicker{
+  50%{filter:hue-rotate(12deg) brightness(1.05)}
+}
+
+/* Sections */
+.section{padding:56px 16px; border-top:1px solid var(--line); background:linear-gradient(180deg, transparent, rgba(10,12,18,.4))}
+.container{max-width:1040px; margin:0 auto; padding-left:0; padding-right:0}
+
+/* Auto sliding strip (3-up; center is no longer scaled) */
+.strip{padding-top:12px; padding-bottom:10px; min-height:45vh}
+.strip-viewport{max-width:1040px; margin:0 auto; height:45vh; overflow:hidden; position:relative}
+.strip-track{
+  --gap:12px;
+  --card-h: calc(45vh * 0.7);
+  --card-w: calc(var(--card-h) * 4 / 3);
+  display:flex; align-items:center; gap:var(--gap);
+  will-change: transform;
+  transform:translate3d(0,0,0);
+  scroll-snap-type:x mandatory;
+  /* Revert: remove artificial paddings that were clipping left side */
+  padding-left: 0;
+  padding-right: 0;
+  box-sizing:border-box;
+}
+.strip-card{
+  flex:0 0 var(--card-w);
+  height:var(--card-h);
+  border:1px solid var(--line);
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  position:relative;
+  transform-origin:center center;
+  transform:translateZ(0);
+  will-change: transform;
+  transition:transform .36s ease, filter .36s ease;
+  scroll-snap-align:center;
+  opacity:1;
+}
+.strip-card img{
+  width:100%; height:100%; object-fit:cover; display:block;
+  object-position:center center; /* center content within each card */
+}
+/* Reserve slight space so neighbors don't pop when center scales */
+.strip-card::before{
+  content:"";
+  position:absolute; inset:-1px;
+  pointer-events:none;
+  border-radius:inherit;
+  box-shadow:inset 0 0 0 1px rgba(11,13,18,.4);
+}
+/* Center emphasis: subtle scale and glow to indicate current center card */
+.strip-card.is-center{
+  transform:scale(1.03);
+  z-index:2;
+  filter:brightness(1.06) saturate(1.04);
+  box-shadow:
+    0 0 0 1px rgba(128,255,234,.25),
+    0 10px 28px rgba(0,0,0,.6),
+    0 0 18px rgba(0,229,255,.18);
+}
+/* 完全にフェード無効化（クラスが付与されても視覚変化なし） */
+.strip-card.is-exiting-left{
+  opacity:1;
+}
+/* Edge gradients: restore simple full overlay with generous transparent center so no central clipping */
+.strip-viewport::after, .strip-viewport::before{
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:linear-gradient(90deg, rgba(11,13,18,.6), rgba(11,13,18,0) 12%, rgba(11,13,18,0) 88%, rgba(11,13,18,.6));
+  mix-blend-mode:multiply;
+}
+@media (min-width:900px){
+  .strip-viewport{height:44vh}
+  .strip-track{--card-h: calc(44vh * 0.7); --card-w: calc(var(--card-h) * 4 / 3)}
+}
+@media (max-width:480px){
+  .strip-viewport{height:42vh}
+  .strip-track{--gap:10px; --card-h: calc(42vh * 0.68); --card-w: calc(var(--card-h) * 4 / 3)}
+}
+
+/* Horizontal scroller for Featured Spots */
+.spots-scroller{
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns: clamp(70%, 76vw, 84%);
+  gap:10px;
+  overflow-x:auto;
+  overflow-y:hidden;
+  padding:4px 12px 2px;
+  margin:2px 0 0;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;
+  overscroll-behavior-x:contain;
+  max-width:100vw;
+  contain:content; /* isolate layout to prevent affecting page width */
+}
+.spots-scroller::-webkit-scrollbar{height:8px}
+.spots-scroller::-webkit-scrollbar-thumb{background:rgba(128,255,234,.25); border-radius:8px}
+.spots-scroller::-webkit-scrollbar-track{background:rgba(16,22,32,.6)}
+
+.spot-card{
+  scroll-snap-align:start;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:14px;
+  overflow:hidden;
+  box-shadow:var(--shadow);
+  min-width:0; /* avoid overflow with long text */
+}
+.spot-card img{
+  display:block; width:100%; height:auto; aspect-ratio:4/3; object-fit:cover; image-rendering:-webkit-optimize-contrast
+}
+.spot-card figcaption{padding:12px}
+.spot-card h3{margin:0 0 6px; font-size:18px}
+.spot-card p{margin:0; color:var(--muted)}
+
+.scroll-hint{
+  text-align:center; color:var(--muted); font-size:12px; margin-top:10px; opacity:.8;
+}
+
+/* Remove old grid-specific styles (kept for backward compatibility if any old markup remains) */
+.areas .areas-grid{display:none}
+.area{display:none}
+.area img{display:none}
+.area figcaption{display:none}
+.area h3{display:none}
+.area p{display:none}
+
+.screen-frame{
+  margin:0; background:var(--card); border:1px solid var(--line); border-radius:16px; padding:10px; box-shadow:var(--shadow); text-align:center;
+  max-width:70%; /* 約70%に縮小 */
+  margin-left:auto; margin-right:auto; /* 中央寄せ */
+}
+ /* Match actual screenshot ratio: 710x1075 ≈ 142:215 ≈ 0.661 */
+.screen-frame img{width:100%; height:auto; aspect-ratio:142/215; object-fit:cover; border-radius:10px}
+.screen-frame figcaption{margin-top:8px; color:var(--muted); font-size:13px}
+
+/* Mobile spacing tighten for sections under header */
+@media (max-width:720px){
+  .section{padding:48px 14px}
+}
+@media (max-width:380px){
+  .section{padding:44px 12px}
+}
+
+.beta .lead{font-size:20px; color:#b8fffb; text-shadow:0 0 10px rgba(0,229,255,.25)}
+
+.faq details{background:var(--card); border:1px solid var(--line); border-radius:10px; padding:10px 12px; margin-bottom:10px}
+.faq summary{cursor:pointer; font-weight:700}
+.faq p{color:var(--muted); margin:.5em 0 0}
+
+/* CTA band */
+.cta-band{
+  position:relative; padding:28px 16px; background:
+    linear-gradient(90deg, rgba(0,229,255,.15), rgba(255,61,240,.12)),
+    linear-gradient(180deg, #0d121b, #0a0e15);
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+.band-inner{display:flex; flex-direction:column; align-items:center; gap:10px}
+.band-copy{margin:0; font-weight:700; letter-spacing:.04em}
+
+/* Footer */
+.site-footer{padding:18px 16px; background:#080b11; border-top:1px solid var(--line)}
+.footer-inner{max-width:1040px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; gap:10px}
+.footer-link{color:var(--muted); text-decoration:none; margin-left:12px}
+.footer-link:hover{color:var(--fg)}
+ 
+/* Buttons */
+.btn{
+  display:inline-block; text-decoration:none; color:#061016; background:var(--accent);
+  padding:12px 18px; border-radius:10px; font-weight:800; text-transform:uppercase; letter-spacing:.08em;
+  border:1px solid rgba(128,255,234,.25);
+  position:relative;
+  overflow:hidden; /* ripple containment */
+}
+
+/* Strip responsive minor tweak */
+@media (min-width:720px){
+  .strip{padding-top:16px; padding-bottom:14px}
+}
+.btn.large{padding:14px 20px}
+.btn.neon{
+  background:linear-gradient(90deg, var(--accent), var(--accent-2));
+  box-shadow:
+    0 0 12px rgba(0,229,255,.35),
+    0 0 24px rgba(255,61,240,.15),
+    inset 0 0 12px rgba(255,255,255,.12);
+  /* ripple effect using radial-gradient at --rx/--ry */
+  isolation:isolate;
+}
+.btn.neon:hover{
+  filter:saturate(1.15) brightness(1.06);
+  transform:translateY(-1px);
+}
+/* Ripple pseudo-element draws from CSS variables set by JS */
+.btn.neon::after{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(120px 120px at var(--rx,50%) var(--ry,50%),
+      rgba(255,255,255,.25),
+      rgba(255,255,255,0) 60%);
+  opacity:0; transition:opacity .24s ease;
+}
+.btn.neon[data-rippling="1"]::after{opacity:1}
+
+/* Responsive */
+@media (min-width:720px){
+  .top-nav{gap:18px}
+  .cards .card-grid{grid-template-columns:repeat(2,1fr)}
+  /* On tablet/desktop, show larger but still horizontally scrollable cards */
+  .spots-scroller{grid-auto-columns:minmax(280px, 36%); gap:14px; margin:8px 0 0}
+  .steps{grid-template-columns:repeat(4,1fr)}
+  .band-inner{flex-direction:row; justify-content:center}
+}
+/* Section title scan sweep (class added by JS when visible) */
+.section-title{
+  position:relative;
+  display:inline-block;
+}
+.section-title.scanned::after{
+  content:"";
+  position:absolute; inset:0; pointer-events:none;
+  background:
+    linear-gradient(90deg, rgba(128,255,234,0) 0%,
+      rgba(128,255,234,.22) 45%,
+      rgba(255,61,240,.18) 55%,
+      rgba(128,255,234,0) 100%);
+  mix-blend-mode:screen;
+  animation:scanPass 900ms ease forwards;
+}
+@keyframes scanPass{
+  0%{transform:translateX(-60%); opacity:.0}
+  15%{opacity:.85}
+  100%{transform:translateX(120%); opacity:0}
+}
+
+/* Save-Data: tone down heavy shadows/filters */
+.save-data .global-noise{display:none}
+.save-data .scanlines{opacity:.2}
+.save-data .strip-card{box-shadow:none}
+.save-data .btn.neon{box-shadow:none}
+ 
+/* Extra small safety: trim any rogue widths on tiny phones */
+@media (max-width:360px){
+  .spots-scroller{padding-left:12px; padding-right:12px}
+}
+
+/* Small tweaks for very narrow devices */
+@media (max-width:360px){
+  .brand-text{display:none}
+}
+
+/* Utility hidden text (if needed) */
+.sr-only{
+  position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0;
+}
+/* progress bar */
+.progress-bar{
+  position:fixed; top:0; left:0; height:4px; width:0%;
+  background: linear-gradient(90deg, var(--accent, #00e5ff), #66ffff);
+  z-index: 9999;
+  box-shadow: 0 0 8px rgba(0,229,255,.5);
+}
+
+/* footer visibility */
+.site-footer{ position:relative; z-index: 10; }
+.spots-scroller::before, .spots-scroller::after{ z-index: 1; }
+
+/* play areas sizing */
+#areas .route-card img{
+  width:100%;
+  height: clamp(140px, 32vw, 200px);
+  object-fit: cover;
+}
+
+/* progress bar v2 */
+/* duplicate .progress-bar removed */
+
+
+/* how-screens subsection */
+.how-screens{ margin-top: 14px; }
+.section-subtitle{ font-size: clamp(16px, 4.4vw, 20px); opacity:.95; margin: 8px 0 10px; }
+
+/* device-like frame for screenshots */
+.screen-frame{
+  background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
+  border-radius: 26px; border: 1.5px solid rgba(128,255,234,.18);
+  box-shadow: 0 10px 40px rgba(0,0,0,.35), inset 0 0 24px rgba(0,229,255,.08);
+  padding: 10px; position: relative; overflow: hidden;
+  scroll-snap-align: center; scroll-snap-stop: always;
+}
+.screen-frame::before{
+  content:""; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+  width:56px; height:6px; border-radius: 6px;
+  background: rgba(0,0,0,.6); box-shadow: 0 1px 0 rgba(255,255,255,.08) inset;
+}
+.screen-frame img{ display:block; width:100%; height:auto; border-radius: 18px; box-shadow: 0 0 0 1px rgba(0,0,0,.4) inset; }
+
+/* center-snap carousel (読みやすさ向上) */
+.spots-scroller{
+  display:grid; grid-auto-flow:column; gap:12px;
+  grid-auto-columns: clamp(78%, 86vw, 520px);
+  padding: 8px 0 10px;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--sp, 12px);
+  -webkit-overflow-scrolling: touch;
+  overflow-x:auto;
+}
+.spots-scroller::before, .spots-scroller::after{
+  content:""; position: sticky; top:0; width: 28px; height: 100%;
+  pointer-events:none; display:block; z-index:1;
+}
+.spots-scroller::before{ left: 0; background: linear-gradient(90deg, rgba(10,12,18,1), rgba(10,12,18,0)); }
+.spots-scroller::after{ right: 0; background: linear-gradient(270deg, rgba(10,12,18,1), rgba(10,12,18,0)); }
+@media (max-width:420px){ .spots-scroller{ grid-auto-columns: 88vw; gap:10px; } }
+
+/* Play Areas sizing（はみ出し防止） */
+#areas .route-card img{ width:100%; height: clamp(140px, 32vw, 200px); object-fit: cover; }
+
+/* footer visibility on mobile */
+.site-footer{ position:relative; z-index: 10; }
+
+
+/* Small note under CTA buttons */
+.cta-note{ font-size: 12px; opacity:.8; margin-top: 6px; }
+@media (min-width: 768px){ .cta-note{ font-size: 13px; } }
+
+/* === Enhanced "How It Works" styling === */
+.steps{
+  list-style:none; padding:0; margin:18px 0 0;
+  display:grid; gap:12px;
+}
+@media (min-width:720px){
+  .steps{grid-template-columns:repeat(4,1fr); gap:14px}
+}
+.step{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 12px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.steps--designed .step::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(220px 140px at 120% -20%, rgba(128,255,234,.12), transparent 60%);
+  pointer-events:none;
+}
+.step h3{
+  display:flex; align-items:center; gap:8px;
+  margin: 0 0 6px;
+  font-size: clamp(15px, 2.6vw, 18px);
+}
+.step h3 .i{flex:0 0 auto; opacity:.9}
+.step p{margin:0; color:var(--muted);}
+
+/* === Enhanced "Why Tokyo Quest" cards === */
+.cards .card-grid{
+  display:grid; grid-template-columns:1fr; gap:12px;
+}
+@media (min-width:720px){
+  .cards .card-grid{grid-template-columns:repeat(2,1fr)}
+}
+.cards .card{
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  box-shadow: var(--shadow);
+  position: relative;
+  overflow: hidden;
+}
+.cards .card::after{
+  content:""; position:absolute; inset:0;
+  background: radial-gradient(260px 160px at -10% -10%, rgba(255,61,240,.12), transparent 60%);
+  pointer-events:none;
+}
+.cards .card h3{
+  display:flex; align-items:center; gap:8px;
+  margin:0 0 6px; font-size:18px;
+}
+.cards .card h3 .i{opacity:.9}
+.cards .card p{margin:0; color:var(--muted)}
+
+/* === Play Areas: clickable cards with icon badges === */
+.route-grid{
+  display:grid; gap:12px;
+}
+@media (min-width:720px){
+  .route-grid{grid-template-columns:repeat(3,1fr)}
+}
+.route-card{
+  display:block; text-decoration:none; color:inherit;
+  background: var(--card);
+  border:1px solid var(--line);
+  border-radius: 14px;
+  overflow:hidden; box-shadow: var(--shadow);
+  transition: transform .18s ease, filter .18s ease;
+}
+.route-card:hover{ transform: translateY(-2px); filter: brightness(1.03) }
+.route-card img{ width:100%; height: clamp(140px, 32vw, 200px); object-fit: cover; display:block }
+.route-meta{ display:flex; align-items:center; justify-content:space-between; padding: 10px 12px; gap:10px }
+.route-meta h3{ margin:0; font-size:18px }
+.badge--style{
+  display:inline-flex; align-items:center; gap:6px;
+  color: var(--muted); font-size: 12px;
+  background: rgba(128,255,234,.08);
+  border: 1px solid rgba(128,255,234,.14);
+  padding: 4px 8px; border-radius: 999px;
+  white-space: nowrap;
+}
+.badge--style .i{ opacity:.95 }
+.style-label{ letter-spacing:.02em }
+
+/* SVG icon defaults */
+.i{ fill: currentColor; stroke: none; display:inline-block; vertical-align:middle }
+.i-ticket{ fill: none; stroke: currentColor; stroke-width:1.75 }
+.i-compass, .i-clock{ fill: none; stroke: currentColor; stroke-width:1.75 }
+
+/* === Fix: Play Areas layout & visited color === */
+/* Ensure stable multi-column layout and prevent default visited link purple */
+.route-grid {
+  /* default: single column; explicit for robustness */
+  grid-template-columns: 1fr;
+}
+@media (min-width: 720px) {
+  .route-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
+  }
+}
+
+/* Prevent anchor visited color from leaking into headings inside the cards */
+.route-card:link,
+.route-card:visited,
+.route-card:hover,
+.route-card:active {
+  color: var(--fg);
+  text-decoration: none;
+}
+
+/* Make sure the title stays readable regardless of link state */
+.route-card .route-meta h3 {
+  color: var(--fg);
+}
+
+/* Keep the style pill muted and on one line for CJK labels */
+.badge--style { color: var(--muted); }
+.badge--style .style-label { white-space: nowrap; }
