@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-17149772539"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-17149772539');
+</script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Tokyo Quest — 用不一樣的方式探索東京</title>
+  <meta name="description" content="在 30 分鐘內解鎖道地私房景點。免預約、免下載 App，GPS 導航、遊戲式體驗，避開觀光人潮，發現一般攻略找不到的東京。" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Tokyo Quest — 用不一樣的方式探索東京" />
+  <meta property="og:description" content="發現一般攻略找不到的私房景點。30 分鐘任務，免預約，測試期間完全免費。" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://tokyo-quest.com/zh" />
+  <meta property="og:image" content="https://tokyo-quest.com/zh/og-image.jpg" />
+<!-- Favicons -->
+  <!-- Use existing PNG only (ico/svg are not present) -->
+  <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="./favicon.png" />
+  <link rel="apple-touch-icon" href="./favicon.png" />
+</head>
+<body>
+  <div class="global-noise" aria-hidden="true"></div>
+  <div class="scanlines" aria-hidden="true"></div>
+
+  <header class="site-header" role="banner">
+    <a class="brand" href="https://tokyo-quest.com/zh" aria-label="Tokyo Quest 首頁">
+      <!-- Logo image intentionally hidden via CSS; show glitch brand text instead -->
+      <img id="brand-logo" src="./assets/logo-placeholder.png" alt="Tokyo Quest Logo" width="140" height="40" />
+      <span class="brand-text brand-text--glitch" data-glitch="TokyoQuest[β]">TokyoQuest[β]</span>
+    </a>
+    <nav class="top-nav" aria-label="Primary">
+      <a class="nav-link" href="#how">玩法說明</a>
+      <a class="nav-link" href="#why">為什麼</a>
+      <a class="nav-link" href="#areas">可遊玩區域</a>
+      <a class="nav-link cta" href="https://tokyo-quest.com/zh" data-cta="top">開始探索</a>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <!-- Add hero--top to move text to top variant as requested -->
+  <section class="hero hero--top" aria-label="Hero">
+    <picture>
+      <!-- Local hero image from Downloads path mirrored via relative path note:
+           For security, browsers cannot load from C:\ directly. Please copy
+           C:\Users\yazir\Downloads\hero.jpg to landing2/assets/hero.jpg to display.
+           We set src to that relative path. -->
+      <img class="hero-bg" src="./assets/hero.jpg" alt="" aria-hidden="true" />
+    </picture>
+    <div class="hero-overlay"></div>
+    <div class="hero-inner">
+      <h1 class="glitch" data-glitch="用不一樣的方式探索東京">用不一樣的方式探索東京</h1>
+      <p class="sub">
+        發現一般攻略找不到的私房景點。
+      </p>
+      <div class="hero-cta">
+        <a class="btn neon" href="https://tokyo-quest.com/zh" data-cta="hero">開始探索</a>
+            <p class="cta-note">30 分任務｜免預約｜免下載 App</p>
+        <p class="trust">
+          GPS 導航・遊戲式設計・避開觀光人潮
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Auto Sliding Spots Strip (below hero) -->
+  <section class="strip section">
+    <div class="strip-viewport" aria-label="Auto sliding spots">
+      <ul class="strip-track">
+        <li class="strip-card">
+          <img src="./assets/slide-spot-01.webp" alt="景點幻燈片 01" width="800" height="600" />
+        </li>
+        <li class="strip-card">
+          <img src="./assets/slide-spot-02.webp" alt="景點幻燈片 02" width="800" height="600" />
+        </li>
+        <li class="strip-card">
+          <img src="./assets/slide-spot-03.webp" alt="景點幻燈片 03" width="800" height="600" />
+        </li>
+        <li class="strip-card">
+          <img src="./assets/slide-spot-04.webp" alt="景點幻燈片 04" width="800" height="600" />
+        </li>
+        <li class="strip-card">
+          <img src="./assets/slide-spot-05.webp" alt="景點幻燈片 05" width="800" height="600" />
+        </li>
+        <li class="strip-card">
+          <img src="./assets/slide-spot-06.webp" alt="景點幻燈片 06" width="800" height="600" />
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section id="how" class="section how">
+    <div class="container">
+      <h2 class="section-title">玩法說明</h2>
+      <ol class="steps steps--designed">
+        <li class="step">
+          <h3><span class="step-title">步驟 1 — 選一個車站任務</span></h3>
+          <p>從東京主要車站周邊的原創路線中挑一條開始。</p>
+        </li>
+        <li class="step">
+          <h3><span class="step-title">步驟 2 — 依照照片與方向提示前進</span></h3>
+          <p>利用距離與方位提示導航，過程零暴雷。</p>
+        </li>
+        <li class="step">
+          <h3><span class="step-title">步驟 3 — 解鎖隱藏景點</span></h3>
+          <p>找到在地人喜愛、搜尋排行看不到的地方。</p>
+        </li>
+        <li class="step">
+          <h3><span class="step-title">步驟 4 — 30 分鐘剛剛好</span></h3>
+          <p>把微型冒險塞進行程中的任何空檔。</p>
+        </li>
+      </ol>
+    </div>
+
+ <!-- In-App Screenshots (horizontal scroller) -->
+  <section id="screenshot" class="section screenshot">
+    <div class="container">
+
+      <div class="spots-scroller" role="region" aria-label="App 介面輪播" tabindex="0">
+        <!-- 1) Core Hints -->
+        <figure class="screen-frame">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='142' height='215' viewBox='0 0 142 215'><rect width='142' height='215' fill='%23152130'/></svg>" data-src="./assets/screen-01.webp" alt="顯示距離與方向提示的 App 介面" width="710" height="1075" />
+          <figcaption>提示僅顯示距離與方向，不暴雷。</figcaption>
+        </figure>
+
+        <!-- 2) Playable Areas on the Map -->
+        <figure class="screen-frame">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='142' height='215' viewBox='0 0 142 215'><rect width='142' height='215' fill='%23152130'/></svg>" data-src="./assets/screen-02.webp" alt="地圖上顯示可遊玩區域" width="710" height="1075" />
+          <figcaption>地圖上顯示可遊玩區域——看看從哪裡可以開始。</figcaption>
+        </figure>
+
+        <!-- 3) Meaning and History of Each Spot -->
+        <figure class="screen-frame">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='142' height='215' viewBox='0 0 142 215'><rect width='142' height='215' fill='%23152130'/></svg>" data-src="./assets/screen-03.webp" alt="景點的由來與歷史說明" width="710" height="1075" />
+          <figcaption>由來與歷史——了解每個景點背後的故事。</figcaption>
+        </figure>
+      </div>
+
+      <p class="scroll-hint" aria-hidden="true">左右滑動查看更多</p>
+    </div>
+  </section>
+
+  
+  </section>
+
+  <!-- Why Tokyo Quest -->
+  <section id="why" class="section why">
+    <div class="container cards">
+      <h2 class="section-title">為什麼選 Tokyo Quest</h2>
+      <div class="card-grid">
+        <article class="card">
+          <h3><span>免預約</span></h3>
+          <p>想玩就玩，完全不用事前規劃。</p>
+        </article>
+        <article class="card">
+          <h3><span>在地感滿點</span></h3>
+          <p>避開觀光套路，走進在地人真的會去的地方。</p>
+        </article>
+        <article class="card">
+          <h3><span>測試期免費</span></h3>
+          <p>現在就試試看——我們優化期間完全免費。</p>
+        </article>
+        <article class="card">
+          <h3><span>把城市當成遊戲場</span></h3>
+          <p>用解謎與探索的方式逛城市。</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Spots — horizontal scroll on mobile -->
+  <section id="featured" class="section areas">
+    <div class="container">
+      <h2 class="section-title">精選景點</h2>
+
+      <div class="spots-scroller" role="region" aria-label="Featured spots carousel" tabindex="0">
+        <!-- 1. 渋谷の繁華街にこっそりたたずむ地蔵（道祖神） -->
+        <figure class="spot-card">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='3' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23152130'/></svg>" data-src="./assets/spot-guardian.webp" alt="繁華街角的一尊小型守護神像" width="720" height="540" />
+          <figcaption>
+            <h3>人潮中的守護神</h3>
+            <p>在熱鬧夜街的迷宮裡，一尊路旁的小神像默默守護。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 2. 渋谷のレトロなネオンサイン（百軒店） -->
+        <figure class="spot-card">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='3' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23152130'/></svg>" data-src="./assets/spot-neon.webp" alt="老街巷中的復古霓虹招牌" width="720" height="540" />
+          <figcaption>
+            <h3>復古霓虹小巷</h3>
+            <p>粉與青的霓虹嗡鳴，把你帶進一個小小的時光口袋。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 3. 新宿で落語が聞ける寄席（1897年から） -->
+        <figure class="spot-card">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='3' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23152130'/></svg>" data-src="./assets/spot-rakugo.webp" alt="傳統說書舞台的劇場空間" width="720" height="540" />
+          <figcaption>
+            <h3>自 1897 年起的說書舞台</h3>
+            <p>坐在會吱呀作響的木椅上，聽百年淬鍊的笑點。</p>
+          </figcaption>
+        </figure>
+
+        <!-- 4. 原宿の静かな神社（19世紀の海軍軍人を祀る） -->
+        <figure class="spot-card">
+          <img class="lazy" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='4' height='3' viewBox='0 0 4 3'><rect width='4' height='3' fill='%23152130'/></svg>" data-src="./assets/spot-shrine.webp" alt="時尚商街後方的一處靜謐神社" width="720" height="540" />
+          <figcaption>
+            <h3>潮街背後的一方靜神社</h3>
+            <p>高樹成蔭，與海軍歷史相關的祭祀靜靜安放於此。</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <p class="scroll-hint" aria-hidden="true">滑動探索</p>
+    </div>
+  </section>
+
+  <!-- Beta & Pricing -->
+  <section class="section beta">
+    <div class="container">
+      <h2 class="section-title">測試與價格</h2>
+      <p class="lead">測試期間 100% 免費</p>
+      <p>目前所有路線皆可免費體驗。</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="section faq">
+    <div class="container">
+      <h2 class="section-title">常見問題</h2>
+      <details>
+        <summary>需要會日文嗎？</summary>
+        <p>不需要。App 提供英文介面。</p>
+      </details>
+      <details>
+        <summary>離線可用嗎？</summary>
+        <p>需要 GPS 與基本的網路連線。</p>
+      </details>
+      <details>
+        <summary>會很觀光客嗎？</summary>
+        <p>我們專注介紹低調、較少觀光客的在地點。</p>
+      </details>
+      <details>
+        <summary>一次任務多長？</summary>
+        <p>每條任務大約 30 分鐘。</p>
+      </details>
+    </div>
+  </section>
+
+  <section id="areas" class="section routes">
+  <div class="container">
+  <h2 class="section-title">可遊玩區域</h2>
+  <div class="route-grid">
+    <a class="route-card" href="https://tokyo-quest.com/zh/select?location=Shibuya" aria-label="選擇澀谷任務">
+      <img src="./assets/playareas-shibuya.webp" alt="澀谷區域" loading="lazy">
+      <div class="route-meta">
+        <h3>澀谷</h3>
+        <span class="badge badge--style">
+          <span class="style-label">後街小巷</span>
+        </span>
+      </div>
+    </a>
+    <a class="route-card" href="https://tokyo-quest.com/zh/select?location=Shinjuku" aria-label="選擇新宿任務">
+      <img src="./assets/playareas-shinjuku.webp" alt="新宿區域" loading="lazy">
+      <div class="route-meta">
+        <h3>新宿</h3>
+        <span class="badge badge--style">
+          <span class="style-label">隱藏神社</span>
+        </span>
+      </div>
+    </a>
+    <a class="route-card" href="https://tokyo-quest.com/zh/select?location=Harajuku" aria-label="選擇原宿任務">
+      <img src="./assets/playareas-harajuku.webp" alt="原宿區域" loading="lazy">
+      <div class="route-meta">
+        <h3>原宿</h3>
+        <span class="badge badge--style">
+          <span class="style-label">次文化</span>
+        </span>
+      </div>
+    </a>
+  </div>
+</div>
+</section>
+
+  <section class="cta-band">
+    <div class="container band-inner">
+      <p class="band-copy">準備開始一場微型冒險嗎？</p>
+      <a class="btn neon large" href="https://tokyo-quest.com/zh" data-cta="band">開始探索</a>
+      <p class="cta-note">免預約・免下載 App・免註冊</p>
+    </div>
+  </section>
+
+<footer class="site-footer" role="contentinfo">
+    <div class="container footer-inner">
+      <small>© Tokyo Quest</small>
+      <nav aria-label="Legal">
+        <a class="footer-link" href="https://tokyo-quest.com/zh/terms" target="_blank" rel="noreferrer">使用條款</a>
+        <a class="footer-link" href="mailto:kanetomo.seihyo@gmail.com">Contact</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="./main.js" defer></script>
+
+  <!-- Notes for image replacement (Japanese):
+    - ロゴ: landing2/assets/logo-placeholder.png を後で差し替え可（同名推奨）
+    - ヒーロー: C:\Users\yazir\Downloads\hero.jpg を landing2/assets/hero.jpg にコピーして下さい
+    - エリア: area-*.webp を後で差し替え可
+    - スクショ: app-screenshot.webp を後で差し替え可
+  -->
+</body>
+</html>
